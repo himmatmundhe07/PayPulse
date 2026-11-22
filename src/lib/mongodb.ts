@@ -2,10 +2,12 @@ import mongoose from 'mongoose';
 import dns from 'dns';
 
 // Workaround for Windows / ISP DNS resolvers failing to resolve MongoDB SRV records
-try {
-  dns.setServers(['8.8.8.8', '1.1.1.1']);
-} catch {
-  // Ignore in environments where setServers is not allowed
+if (process.platform === 'win32') {
+  try {
+    dns.setServers(['8.8.8.8', '1.1.1.1']);
+  } catch {
+    // Ignore in environments where setServers is not allowed
+  }
 }
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
